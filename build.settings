@@ -34,6 +34,7 @@ settings = {
     },
     excludeFiles = {
         all = {
+            'Sothlink Project Files/*.lmk',
             'readme.md',
             'Banner-*.png',
             'Icon-*dpi.png',
