@@ -1,5 +1,5 @@
 -- play.lua for Particle Plex
--- Copyright 2017 Jericho Crosby. All Rights Reserved.
+-- Copyright 2018 Jericho Crosby
 local _W = display.contentWidth
 local composer = require('composer')
 local widget = require('widget')
@@ -529,24 +529,13 @@ function spawn( objectType, xVelocity, yVelocity )
         local collisionFilter = { categoryBits = 4, maskBits = 2 } -- collides with player only
         local body = { filter = collisionFilter, isSensor = true }
         if "food" == objectType then
-            if settings["useOtherFood"] then
-                local healthyFood_W = 24
-                local healthyFood_H = 24
-                local randomNumber = math.random(1, 100)
-                object = display.newImageRect('images/healthy food/'..randomNumber..'.png', healthyFood_W, healthyFood_H)
-                object.x = startX
-                object.y = startY
-                object.sizeXY = sizeXY
-            else
-                randomSize = math.random(1, 2)
-                if randomSize == 1 then
-                    sizeXY = sizeXY - sizeXY + math.random(settings["minSize"], settings["maxSize"])
-                else
-                    sizeXY = sizeXY
-                end
-                object = display.newRect( startX, startY, sizeXY, sizeXY )
-                object.sizeXY = sizeXY
-            end
+            local healthyFood_W = 24
+            local healthyFood_H = 24
+            local randomNumber = math.random(1, 100)
+            object = display.newImageRect('images/healthy food/'..randomNumber..'.png', healthyFood_W, healthyFood_H)
+            object.x = startX
+            object.y = startY
+            object.sizeXY = sizeXY
         elseif "poison" == objectType then
             local randomSize = math.random(1, 2)
             if randomSize == 1 then
@@ -554,80 +543,32 @@ function spawn( objectType, xVelocity, yVelocity )
             else
                 sizeXY = sizeXY
             end
-            object = display.newRect( startX, startY, sizeXY, sizeXY )
+            local poisonousFood_W = 24
+            local poisonousFood_H = 24
+            local random_number = math.random(1, 2)
+            object = display.newImageRect('images/poisonous food/'..random_number..'.png', poisonousFood_W, poisonousFood_H)
+            object.x = startX
+            object.y = startY
             object.sizeXY = sizeXY
         end
         if "reward" == objectType or "penalty" == objectType then
-            if settings["useOtherFood"] then
-                object = display.newImageRect('images/powerups/powerup.png', 32, 32)
-                object.x = startX
-                object.y = startY
-                object.sizeXY = 0
-                local alphaFrom = 0.25
-                local alphaTo = 1
-                local scaleFrom = 0.7
-                local scaleTo = 1
-                local animationTime = 250
-                local function animate_powerup( )
-                    local scaleUp = function( )
-                        powerup_animation = transition.to( object, { time = animationTime, alpha = alphaFrom, xScale = scaleFrom, yScale = scaleFrom, onComplete = animate_powerup } )
-                    end
-                    powerup_animation = transition.to( object, { time = animationTime, alpha = alphaTo, xScale = scaleTo, yScale = scaleTo, onComplete = scaleUp } )
+            object = display.newImageRect('images/powerups/powerup.png', 32, 32)
+            object.x = startX
+            object.y = startY
+            object.sizeXY = 0
+            local alphaFrom = 0.25
+            local alphaTo = 1
+            local scaleFrom = 0.7
+            local scaleTo = 1
+            local animationTime = 250
+            local function animate_powerup( )
+                local scaleUp = function( )
+                    powerup_animation = transition.to( object, { time = animationTime, alpha = alphaFrom, xScale = scaleFrom, yScale = scaleFrom, onComplete = animate_powerup } )
                 end
-                -- initialize animation
-                animate_powerup( )
-            else
-                object = display.newCircle( startX, startY, 15 )
-                object.sizeXY = 30
+                powerup_animation = transition.to( object, { time = animationTime, alpha = alphaTo, xScale = scaleTo, yScale = scaleTo, onComplete = scaleUp } )
             end
-        end
-        if "food" == objectType or "reward" == objectType then
-            if "reward" == objectType then
-                if not settings["useOtherFood"] then
-                    -- food and rewards --
-                    local rewardColor = {
-                        type = "gradient",
-                        color1 = { colorsRGB.RGB("purple") },
-                        color2 = { colorsRGB.RGB("purple") },
-                        direction = "up"
-                    }
-                    object.fill = rewardColor
-                end
-            elseif "food" == objectType then
-                if not settings["useOtherFood"] then
-                    -- Food --
-                    local foodColor = {
-                        type = "gradient",
-                        color1 = { 0, 255, 0 },
-                        color2 = { 0, 255, 0 },
-                        direction = "up"
-                    }
-                    object.fill = foodColor
-                end
-            end
-        end
-        if "poison" == objectType or "penalty" == objectType then
-            if "poison" == objectType then
-                -- poision
-                local poisionColor = {
-                    type = "gradient",
-                    color1 = { 255, 0, 0 },
-                    color2 = { 255, 0, 0 },
-                    direction = "down"
-                }
-                object.fill = poisionColor
-            elseif "penalty" == objectType then
-                if not settings["useOtherFood"] then
-                    -- penalty --
-                    local rewardColor = {
-                        type = "gradient",
-                        color1 = { colorsRGB.RGB("purple") },
-                        color2 = { colorsRGB.RGB("purple") },
-                        direction = "up"
-                    }
-                    object.fill = rewardColor
-                end
-            end
+            -- initialize animation
+            animate_powerup( )
         end
         object.objectType = objectType
         object.xVelocity = xVelocity
