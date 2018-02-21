@@ -1,11 +1,11 @@
 # Compiled Lua sources
 luac.out
-.lmk
 
 # luarocks build files
 *.src.rock
 *.zip
 *.tar.gz
+*.lmk
 
 # Object files
 *.o
