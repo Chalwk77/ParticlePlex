@@ -545,7 +545,7 @@ function spawn( objectType, xVelocity, yVelocity )
             end
             local poisonousFood_W = 24
             local poisonousFood_H = 24
-            local random_number = math.random(1, 2)
+            local random_number = math.random(1, 3)
             object = display.newImageRect('images/poisonous food/'..random_number..'.png', poisonousFood_W, poisonousFood_H)
             object.x = startX
             object.y = startY
