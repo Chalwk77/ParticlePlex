@@ -5,7 +5,6 @@ luac.out
 *.src.rock
 *.zip
 *.tar.gz
-*.lmk
 
 # Object files
 *.o
@@ -39,3 +38,6 @@ luac.out
 *.i*86
 *.x86_64
 *.hex
+
+# ignore directory
+/Sothlink Project Files/
