@@ -83,9 +83,6 @@ colors[9] = { "violet" }
 colors[10] = { "white" }
 colors[11] = { "black" }
 
---------------- FUNCTION VARIABLES ---------------
--- Variables to hold the function pointers.
--- This is only to have one place to show them off.
 local gameHasStarted = true
 local loadScores
 local saveScores
@@ -108,7 +105,6 @@ local randomSpeed
 local gamereset = false
 local menu_bool = false
 
---------------- VARIABLES ---------------
 local background
 local menu
 local score
@@ -125,8 +121,6 @@ local penaltyBar
 local physics
 local _W, _H, _CX, _CY = relayout._W, relayout._H, relayout._CX, relayout._CY
 
---------------- FUNCTIONS ---------------
--- Load scores from file. Returns the score and the highScore. In this order.
 loadScores = function( )
     local scores = {}
     local str = ""
@@ -1146,7 +1140,6 @@ function OnTick( event )
             leftLine.alpha = 0.35
         end
         if colorUpdated and gameHasStarted then
-            --local player2 = createPlayer( player.x - player.width / 2, player.y - player.height / 2, player.width, player.height, player.rotation, player.isVisible )
             local player2 = createPlayer( player.x, player.y, player.width, player.height, player.rotation, player.isVisible )
             if player.isFocus then
                 player2.isFocus = player.isFocus
@@ -1158,11 +1151,7 @@ function OnTick( event )
             player:removeSelf()
             player = player2
         end
-        -- The player.resize stuff is a hack. When you resize a display object, this doesn't get reflected in the physics world.
-        -- Therefore we create a new player with the same properties but a differnt size and remove the old player.
-        -- Hopefully this gets fixed in a future version of Corona SDK.
         if player.resize then
-            --local player2 = createPlayer( player.x - player.width / 2, player.y - player.height / 2, player.width, player.height, player.rotation, player.isVisible )
             local player2 = createPlayer( player.x, player.y, player.width, player.height, player.rotation, player.isVisible )
             if player.isFocus then
                 player2.isFocus = player.isFocus
@@ -1358,16 +1347,12 @@ local function setUpDisplay(grp)
     grp:insert(pauseButton)
 end
 
--- "scene:create()"
 function scene:create( event )
     local sceneGroup = self.view
-    -- Initialize the scene here.
-    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
     setUpDisplay(sceneGroup)
     sounds.playStream('game_music')
 end
 
--- "scene:show()"
 function scene:show( event )
     local sceneGroup = self.view
     local phase = event.phase
@@ -1418,10 +1403,6 @@ function scene:hide( event )
     local sceneGroup = self.view
     local phase = event.phase
     if ( phase == "will" ) then
-        -- Called when the scene is on screen (but is about to go off screen).
-        -- Insert code here to "pause" the scene.
-        -- Example: stop timers, stop animation, stop audio, etc.
-        -- remove objects from scene --
         local function removeBlocks()
             if (object ~= nil) or (objects ~= nil) then
                 for _, object in pairs ( objects ) do
@@ -1433,17 +1414,12 @@ function scene:hide( event )
         removeblocks = timer.performWithDelay(1000 * seconds, removeBlocks )
 
     elseif ( phase == "did" ) then
-        -- Called immediately after scene goes off screen.
+
     end
 end
 
-
--- "scene:destroy()"
 function scene:destroy( event )
     local sceneGroup = self.view
-    -- Called prior to the removal of scene's view ("sceneGroup").
-    -- Insert code here to clean up the scene.
-    -- Example: remove display objects, save state, etc.
 end
 
 local function onKeyPressed( event )
@@ -1474,7 +1450,6 @@ local function onKeyPressed( event )
         if (keyName == "escape") then
             if (gameHasStarted == true) then
                 -- showPauseMenu(true)
-                --print("play.lua - escape key pressed")
                 return true
             end
         end
@@ -1728,8 +1703,7 @@ local function init_spawn_reward()
     end
 end
 init_spawn_reward()
---==========================================================================================--
---==========================================================================================--
+
 function sidebar:create(params)
     local button_group = display.newGroup()
     local params = params or {}
