@@ -104,7 +104,7 @@ local calculateNewVelocity
 local OnNewGame
 local createMenu
 local OnGameEnd
-local forceOnScreen
+local ConstrainToScreen
 local onTouch
 local spawn
 local gameSpecial
@@ -455,7 +455,7 @@ gameOverWon = function( )
 end
 
 -- Forces the object (player) to stay within the visible screen bounds.
-forceOnScreen = function( object )
+ConstrainToScreen = function( object )
     if object.x < object.width then
         object.x = object.width
     end
@@ -487,7 +487,7 @@ onTouch = function(event)
         if event.phase == "moved" then
             player.x = event.x - player.x0
             player.y = event.y - player.y0
-            forceOnScreen( player )
+            ConstrainToScreen( player )
         elseif event.phase == "ended" or event.phase == "cancelled" then
             player.isFocus = false
         end
@@ -529,8 +529,8 @@ function spawn( objectType, xVelocity, yVelocity )
         local collisionFilter = { categoryBits = 4, maskBits = 2 } -- collides with player only
         local body = { filter = collisionFilter, isSensor = true }
         if "food" == objectType then
-            local healthyFood_W = 24
-            local healthyFood_H = 24
+            local healthyFood_W = 32
+            local healthyFood_H = 32
             local randomNumber = math.random(1, 100)
             object = display.newImageRect('images/healthy food/'..randomNumber..'.png', healthyFood_W, healthyFood_H)
             object.x = startX
@@ -543,8 +543,8 @@ function spawn( objectType, xVelocity, yVelocity )
             else
                 sizeXY = sizeXY
             end
-            local poisonousFood_W = 24
-            local poisonousFood_H = 24
+            local poisonousFood_W = 32
+            local poisonousFood_H = 32
             local random_number = math.random(1, 3)
             object = display.newImageRect('images/poisonous food/'..random_number..'.png', poisonousFood_W, poisonousFood_H)
             object.x = startX
@@ -1218,7 +1218,7 @@ function OnTick( event )
         elseif (keyisdown == true and keyisright == true) then
             Runtime:addEventListener( "enterFrame", function( ) player.rotation = -45; end )
         end
-        forceOnScreen( player )
+        ConstrainToScreen( player )
         for key, object in pairs ( objects ) do
             if false == object.isVisible then
                 local xVelocity = 0

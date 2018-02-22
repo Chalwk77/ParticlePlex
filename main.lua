@@ -1,23 +1,25 @@
 display.setStatusBar(display.HiddenStatusBar)
 local composer = require('composer')
 local sounds = require('libraries.sounds')
-local https = require "socket.http"
+local http = require "socket.http"
 local ltn12 = require("ltn12")
 local build_version = system.getInfo( "appVersionString" )
 
 function CheckForUpdates()
     local latest_version_url = "https://pastebin.com/raw/Rw7GXN8z"
-    local game = {version = build_version }
+    local game = {version = build_version}
     local response = {}
-    local a, b, c = https.request({url = latest_version_url, sink = ltn12.sink.table(response)})
+    local a, b, c = http.request({url = latest_version_url, sink = ltn12.sink.table(response)})
     local latest_version = response[1]
     if (string.find(latest_version, "%d%.%d.%d+") == 1) then
+        -- application is up to date
         if game.version == latest_version then
             game_version = display.newText( "Version " .. latest_version, display.viewableContentWidth / 2, display.viewableContentHeight / 2, native.systemFontBold, 10 )
             game_version:setFillColor(1, 0.9, 0.5)
             game_version.x = display.contentCenterX
             game_version.y = display.contentCenterX + display.contentCenterY - 90
             game_version.alpha = 0.50
+            -- an update is available
         elseif game.version < latest_version then
             local function onComplete( event )
                 if ( event.action == "clicked" ) then
@@ -26,7 +28,7 @@ function CheckForUpdates()
                         -- do nothing
                     elseif ( i == 2 ) then
                         -- temporary page
-                        system.openURL("https://pastebin.com/raw/BNPhMuZD")
+                        system.openURL("https://play.google.com/store/apps/details?id=com.gmail.crosby227.jericho.ParticlePlex&hl=en")
                     end
                 end
             end
@@ -42,6 +44,8 @@ function CheckForUpdates()
             game_version.y = display.contentCenterX + display.contentCenterY - 90
             game_version.alpha = 0.50
             game_version:addEventListener( "touch", onTextClick )
+            -- pastebin version is lower than the system version
+        elseif game.version > latest_version then
         end
     end
 end
@@ -77,26 +81,21 @@ settings = {
     ["useCombos"] = false
 }
 
--- Exit and enter fullscreen mode
--- CMD+CTRL+F on OS X
--- F11 or ALT+ENTER on Windows
-local platform = system.getInfo('platformName')
-if platform == 'Mac OS X' or platform == 'Win' then
-    Runtime:addEventListener('key', function(event)
-        if event.phase == 'down' and (
-        (platform == 'Mac OS X' and event.keyName == 'f' and event.isCommandDown and event.isCtrlDown) or
-        (platform == 'Win' and (event.keyName == 'f11' or (event.keyName == 'enter' and event.isAltDown)))
-    ) then
-        if native.getProperty('windowMode') == 'fullscreen' then
-            native.setProperty('windowMode', 'normal')
-        else
-            native.setProperty('windowMode', 'fullscreen')
+function fullScreenListener()
+    local platform = system.getInfo('platformName')
+    if platform == 'Win' then
+        Runtime:addEventListener('key', function(event)
+            if event.phase == 'down' and ((platform == 'Win' and (event.keyName == 'f11' or (event.keyName == 'enter' and event.isAltDown)))) then
+            if native.getProperty('windowMode') == 'fullscreen' then
+                native.setProperty('windowMode', 'normal')
+            else
+                native.setProperty('windowMode', 'fullscreen')
+            end
         end
-    end
-end)
+    end)
+end
 end
 
--- Add support for back button on Android and Window Phone
 local function onBackButtonPressed( event )
 if event.keyName == "back" then
     local platformName = system.getInfo( "platformName" )
@@ -114,7 +113,5 @@ return false
 end
 
 Runtime:addEventListener( "key", onBackButtonPressed )
--- Entry point
 composer.gotoScene( "scenes.menu" )
-
--- Check for Updates
+fullScreenListener()
