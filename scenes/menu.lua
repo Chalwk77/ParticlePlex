@@ -5,7 +5,7 @@ local sounds = require('libraries.sounds')
 local colors = require('classes.colors-rgb')
 local relayout = require('libraries.relayout')
 local scene = composer.newScene()
-menu_alpha = 0.10
+menu_alpha = 0.15
 
 menu_physics = require("physics")
 local menu_tPrevious = system.getTimer( )
@@ -235,8 +235,6 @@ end
 -- "scene:create()"
 function scene:create( event )
     local sceneGroup = self.view
-    -- Initialize the scene here.
-    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
     setUpDisplay(sceneGroup)
     --sounds.playStream('menu_music')
 end
@@ -320,78 +318,59 @@ function spawn_menu_objects( objectType, xVelocity, yVelocity )
         local sizeXY = math.random( 10, 20 )
         local startX
         local startY
-        if 0 == xVelocity then
-            startX = math.random( sizeXY, display.contentWidth - sizeXY )
-        end
-        if xVelocity < 0 then
-            startX = display.contentWidth
-        end
-        if xVelocity > 0 then
-            startX = -sizeXY
-        end
-        if 0 == yVelocity then
-            startY = math.random( sizeXY, display.contentHeight - sizeXY )
-        end
-        if yVelocity < 0 then
-            startY = display.contentHeight
-        end
-        if yVelocity > 0 then
-            startY = -sizeXY
-        end
-        local collisionFilter = { categoryBits = 4, maskBits = 2 } -- collides with player only
+
+        if 0 == xVelocity then startX = math.random( sizeXY, display.contentWidth - sizeXY ) end
+        if xVelocity < 0 then startX = display.contentWidth end
+        if xVelocity > 0 then startX = -sizeXY end
+        if 0 == yVelocity then startY = math.random( sizeXY, display.contentHeight - sizeXY ) end
+        if yVelocity < 0 then startY = display.contentHeight end
+        if yVelocity > 0 then startY = -sizeXY end
+
+        local collisionFilter = { categoryBits = 4, maskBits = 2 }
         local body = { filter = collisionFilter, isSensor = true }
-        if "food" == objectType or "poison" == objectType then
+
+        if "food" == objectType then
+            local healthyFood_W = 32
+            local healthyFood_H = 32
+            local randomNumber = math.random(1, 100)
+            menu_object = display.newImageRect('images/healthy food/'..randomNumber..'.png', healthyFood_W, healthyFood_H)
+            menu_object.x = startX
+            menu_object.y = startY
+            menu_object.sizeXY = sizeXY
+        elseif "poison" == objectType then
             local randomSize = math.random(1, 2)
             if randomSize == 1 then
                 sizeXY = sizeXY - sizeXY + math.random(settings["minSize"], settings["maxSize"])
             else
                 sizeXY = sizeXY
             end
-            menu_object = display.newRect( startX, startY, sizeXY, sizeXY )
+            local poisonousFood_W = 32
+            local poisonousFood_H = 32
+            local random_number = math.random(1, 3)
+            menu_object = display.newImageRect('images/poisonous food/'..random_number..'.png', poisonousFood_W, poisonousFood_H)
+            menu_object.x = startX
+            menu_object.y = startY
             menu_object.sizeXY = sizeXY
         end
+
         if "reward" == objectType or "penalty" == objectType then
-            menu_object = display.newCircle( startX, startY, 15 )
-            menu_object.sizeXY = 30
-        end
-        if "food" == objectType or "reward" == objectType then
-            if "reward" == objectType then
-                local rewardColor = {
-                    type = "gradient",
-                    color1 = { colorsRGB.RGB("purple") },
-                    color2 = { colorsRGB.RGB("purple") },
-                    direction = "up"
-                }
-                menu_object.fill = rewardColor
-            elseif "food" == objectType then
-                local foodColor = {
-                    type = "gradient",
-                    color1 = { 0, 255, 0 },
-                    color2 = { 0, 255, 0 },
-                    direction = "up"
-                }
-                menu_object.fill = foodColor
+            menu_object = display.newImageRect('images/powerups/powerup.png', 32, 32)
+            menu_object.x = startX
+            menu_object.y = startY
+            menu_object.sizeXY = 0
+            local scaleFrom = 0.7
+            local scaleTo = 1
+            local animationTime = 250
+            local function animate_powerup( )
+                local scaleUp = function( )
+                    powerup_animation = transition.to( menu_object, { time = animationTime, alpha = menu_alpha, xScale = scaleFrom, yScale = scaleFrom, onComplete = animate_powerup } )
+                end
+                powerup_animation = transition.to( menu_object, { time = animationTime, alpha = menu_alpha, xScale = scaleTo, yScale = scaleTo, onComplete = scaleUp } )
             end
+            -- initialize animation
+            animate_powerup( )
         end
-        if "poison" == objectType or "penalty" == objectType then
-            if "poison" == objectType then
-                local poisionColor = {
-                    type = "gradient",
-                    color1 = { 255, 0, 0 },
-                    color2 = { 255, 0, 0 },
-                    direction = "down"
-                }
-                menu_object.fill = poisionColor
-            elseif "penalty" == objectType then
-                local rewardColor = {
-                    type = "gradient",
-                    color1 = { colorsRGB.RGB("purple") },
-                    color2 = { colorsRGB.RGB("purple") },
-                    direction = "up"
-                }
-                menu_object.fill = rewardColor
-            end
-        end
+
         menu_object.objectType = objectType
         menu_object.xVelocity = xVelocity
         menu_object.yVelocity = yVelocity

@@ -192,13 +192,8 @@ end
 function createPlayer( x, y, width, height, rotation, visible )
     local playerCollisionFilter = { categoryBits = 2, maskBits = 5 }
     local playerBodyElement = { filter = playerCollisionFilter }
-    if settings["useOtherPlayer"] then
-        local p = display.newImageRect('images/player/player.png', width, height)
-        playerObject = p
-    else
-        local p = display.newRect(x, y, width, height)
-        playerObject = p
-    end
+    local p = display.newImageRect('images/player/player.png', width, height)
+    playerObject = p
     if bgColor == "red" then
         playerObject:setFillColor(colorsRGB.RGB("red"))
     elseif bgColor == "yellow" then
@@ -227,12 +222,8 @@ function createPlayer( x, y, width, height, rotation, visible )
     playerObject.rotation = rotation
     playerObject.resize = false
     playerObject.isSleepingAllowed = false
-
-    if settings["useOtherPlayer"] then
-        playerObject.x = x
-        playerObject.y = y
-    end
-
+    playerObject.x = x
+    playerObject.y = y
     playerObject.anchorX = 0.5
     playerObject.anchorY = 0.5
     return playerObject
@@ -255,7 +246,6 @@ calculateNewVelocity = function( t )
     end
 end
 
--- Starts a new game round. Resets some properties first.
 function OnNewGame()
     canSpawnItems = true
     if nextGameBool then
@@ -483,38 +473,26 @@ onTouch = function(event)
     return true
 end
 
--- objectType is "food", "poison", "reward", or "penalty"
 function spawn( objectType, xVelocity, yVelocity )
     if ( canSpawnItems ) then
         local object
         local sizeXY = math.random( 10, 20 )
         local startX
         local startY
-        if 0 == xVelocity then
-            -- Object moves along the y-axis
-            startX = math.random( sizeXY, display.contentWidth - sizeXY )
-        end
-        if xVelocity < 0 then
-            -- Object moves to the left
-            startX = display.contentWidth
-        end
-        if xVelocity > 0 then
-            -- Object moves to the right
-            startX = -sizeXY
-        end
-        if 0 == yVelocity then
-            -- Object moves along the x-axis
-            startY = math.random( sizeXY, display.contentHeight - sizeXY )
-        end
-        if yVelocity < 0 then
-            -- Object moves to the top
-            startY = display.contentHeight
-        end
-        if yVelocity > 0 then
-            -- Object moves to the bottom
-            startY = -sizeXY
-        end
-        local collisionFilter = { categoryBits = 4, maskBits = 2 } -- collides with player only
+        -- Object moves along the y-axis
+        if 0 == xVelocity then startX = math.random( sizeXY, display.contentWidth - sizeXY ) end
+        -- Object moves along the x-axis
+        if 0 == yVelocity then startY = math.random( sizeXY, display.contentHeight - sizeXY ) end
+        -- Object moves to the left
+        if xVelocity < 0 then startX = display.contentWidth end
+        -- Object moves to the right
+        if xVelocity > 0 then startX = -sizeXY end
+        -- Object moves to the top
+        if yVelocity < 0 then startY = display.contentHeight end
+        -- Object moves to the bottom
+        if yVelocity > 0 then startY = -sizeXY end
+
+        local collisionFilter = { categoryBits = 4, maskBits = 2 }
         local body = { filter = collisionFilter, isSensor = true }
         if "food" == objectType then
             local healthyFood_W = 32

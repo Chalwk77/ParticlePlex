@@ -59,7 +59,6 @@ settings = { }
 settings = {
     ["enableLevelSelection"] = true,
     ["animatePlayer"] = false,
-    ["useOtherPlayer"] = true,
     ["useOtherFood"] = true,
     ["enableSidebarMenu"] = true,
     ["scorelimit"] = 500,
