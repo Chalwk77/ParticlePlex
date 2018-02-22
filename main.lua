@@ -11,41 +11,44 @@ function CheckForUpdates()
     local response = {}
     local a, b, c = http.request({url = latest_version_url, sink = ltn12.sink.table(response)})
     local latest_version = response[1]
-    if (string.find(latest_version, "%d%.%d.%d+") == 1) then
-        -- application is up to date
-        if game.version == latest_version then
-            game_version = display.newText( "Version " .. latest_version, display.viewableContentWidth / 2, display.viewableContentHeight / 2, native.systemFontBold, 10 )
-            game_version:setFillColor(1, 0.9, 0.5)
-            game_version.x = display.contentCenterX
-            game_version.y = display.contentCenterX + display.contentCenterY - 90
-            game_version.alpha = 0.50
-            -- an update is available
-        elseif game.version < latest_version then
-            local function onComplete( event )
-                if ( event.action == "clicked" ) then
-                    local i = event.index
-                    if ( i == 1 ) then
-                        -- do nothing
-                    elseif ( i == 2 ) then
-                        -- temporary page
-                        system.openURL("https://play.google.com/store/apps/details?id=com.gmail.crosby227.jericho.ParticlePlex&hl=en")
+    if latest_version ~= nil then
+        if (string.find(latest_version, "%d%.%d.%d+") == 1) then
+            -- application is up to date
+            if game.version == latest_version then
+                game_version = display.newText( "Version " .. latest_version, display.viewableContentWidth / 2, display.viewableContentHeight / 2, native.systemFontBold, 10 )
+                game_version:setFillColor(1, 0.9, 0.5)
+                game_version.x = display.contentCenterX
+                game_version.y = display.contentCenterX + display.contentCenterY - 90
+                game_version.alpha = 0.50
+                -- an update is available
+            elseif game.version < latest_version then
+                local function onComplete( event )
+                    if ( event.action == "clicked" ) then
+                        local i = event.index
+                        if ( i == 1 ) then
+                            -- do nothing
+                        elseif ( i == 2 ) then
+                            -- opens google play app listing
+                            system.openURL("https://play.google.com/store/apps/details?id=com.gmail.crosby227.jericho.ParticlePlex&hl=en")
+                        end
                     end
                 end
-            end
-            local function onTextClick( event )
-                if ( event.phase == "began" ) then
-                    local alert = native.showAlert( "Download Latest Update", "Would you like to download the latest update?", { "No", "Yes" }, onComplete )
+                local function onTextClick( event )
+                    if ( event.phase == "began" ) then
+                        local alert = native.showAlert( "Download Latest Update", "Would you like to download the latest update?", { "No", "Yes" }, onComplete )
+                    end
+                    return true
                 end
-                return true
+                game_version = display.newText( "Version " .. latest_version .. " is available!", display.viewableContentWidth / 2, display.viewableContentHeight / 2, native.systemFontBold, 10 )
+                game_version:setFillColor(1, 0.9, 0.5)
+                game_version.x = display.contentCenterX
+                game_version.y = display.contentCenterX + display.contentCenterY - 90
+                game_version.alpha = 0.50
+                game_version:addEventListener( "touch", onTextClick )
+                -- pastebin version is lower than the system version
+            elseif game.version > latest_version then
+                -- do nothing (version string will disappear)
             end
-            game_version = display.newText( "Version " .. latest_version .. " is available!", display.viewableContentWidth / 2, display.viewableContentHeight / 2, native.systemFontBold, 10 )
-            game_version:setFillColor(1, 0.9, 0.5)
-            game_version.x = display.contentCenterX
-            game_version.y = display.contentCenterX + display.contentCenterY - 90
-            game_version.alpha = 0.50
-            game_version:addEventListener( "touch", onTextClick )
-            -- pastebin version is lower than the system version
-        elseif game.version > latest_version then
         end
     end
 end
