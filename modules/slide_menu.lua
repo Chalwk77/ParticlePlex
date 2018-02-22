@@ -38,11 +38,11 @@ function slide_menu:new(params)
     end
     local function scrollViewTouchHandler(event)
         if event.phase == "ended" then
-            if gameHasStarted and slideMenuOpen and not colorUpdated then 
+            if gameHasStarted and slideMenuOpen and not colorUpdated then
                 slide_menu:hide_slide_menu()
             end
         elseif event.phase == "moved" then
-            if gameHasStarted and slideMenuOpen and not colorUpdated then 
+            if gameHasStarted and slideMenuOpen and not colorUpdated then
                 slide_menu:hide_slide_menu()
             end
         end
@@ -55,7 +55,6 @@ function slide_menu:new(params)
         horizontalScrollDisabled = true,
         hideBackground = true,
         scrollHeight = 8000,
-        --listener = scrollViewTouchHandler
     }
     for i = 1, #text do
         buttons = widget.newButton({

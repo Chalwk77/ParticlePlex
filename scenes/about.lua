@@ -1,4 +1,3 @@
-
 local composer = require( "composer" )
 local colors = require('classes.colors-rgb')
 local scene = composer.newScene()

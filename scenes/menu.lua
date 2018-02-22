@@ -1,8 +1,3 @@
--- menu.lua for Particle Plex
--- Copyright 2017 Jericho Crosby. All Rights Reserved.
-
--- Corona Simulator "view as" settings:
--- 1080x1920
 local widget = require('widget')
 widget.setTheme ( 'widget_theme_ios' )
 local composer = require( 'composer' )

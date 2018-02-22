@@ -1,5 +1,3 @@
--- options.lua for Particle Plex
--- Copyright 2017 Jericho Crosby. All Rights Reserved.
 local composer = require( 'composer' )
 local scene = composer.newScene()
 local widget = require('widget')
@@ -8,12 +6,6 @@ local databox = require('libraries.databox')
 local colors = require('classes.colors-rgb')
 
 widget.setTheme ( 'widget_theme_ios' )
-
--- -----------------------------------------------------------------------------------------------------------------
--- All code outside of the listener functions will only be executed ONCE unless "composer.removeScene()" is called.
--- -----------------------------------------------------------------------------------------------------------------
-
--- local forward references should go here
 
 local centerX = display.contentCenterX
 local centerY = display.contentCenterY

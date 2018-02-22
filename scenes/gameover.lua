@@ -1,7 +1,3 @@
--- gameover.lua for Particle Plex
--- Copyright 2017 Jericho Crosby. All Rights Reserved.
--- Corona Simulator "view as" settings:
--- 1080x1920
 local composer = require( 'composer' )
 local sounds = require('libraries.sounds')
 local widget = require('widget')

@@ -1,5 +1,3 @@
--- play.lua for Particle Plex
--- Copyright 2018 Jericho Crosby
 local _W = display.contentWidth
 local composer = require('composer')
 local widget = require('widget')
@@ -12,11 +10,7 @@ local toast = require('modules.toast')
 local health = require('modules.healthbar')
 local scene = composer.newScene()
 widget.setTheme("widget_theme_ios")
--- -----------------------------------------------------------------------------------------------------------------
--- All code outside of the listener functions will only be executed ONCE unless "composer.removeScene()" is called.
--- -----------------------------------------------------------------------------------------------------------------
 
--- most commonly used screen coordinates
 local centerX = display.contentCenterX
 local centerY = display.contentCenterY
 local screenLeft = display.screenOriginX
@@ -205,7 +199,7 @@ function createPlayer( x, y, width, height, rotation, visible )
     local playerCollisionFilter = { categoryBits = 2, maskBits = 5 }
     local playerBodyElement = { filter = playerCollisionFilter }
     if settings["useOtherPlayer"] then
-        local p = display.newImageRect('player.png', width, height)
+        local p = display.newImageRect('images/player/player.png', width, height)
         playerObject = p
     else
         local p = display.newRect(x, y, width, height)

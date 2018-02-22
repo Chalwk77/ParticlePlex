@@ -1,5 +1,3 @@
--- nextgame.lua for Particle Plex
--- Copyright 2017 Jericho Crosby. All Rights Reserved.
 local composer = require('composer')
 local relayout = require('libraries.relayout')
 local scene = composer.newScene()
@@ -10,7 +8,7 @@ function scene:create()
     local _W, _H, _CX, _CY = relayout._W, relayout._H, relayout._CX, relayout._CY
 
     local group = self.view
-    
+
     local background = display.newRect(group, _CX, _CY, _W, _H)
     background.fill = {
         type = 'gradient',
@@ -19,18 +17,18 @@ function scene:create()
     }
     relayout.add(background)
     local label = display.newText({
-		parent = group,
+        parent = group,
         text = 'LOADING LEVEL...',
-		x = centerX,
+        x = centerX,
         y = centerY + 100,
-		font = native.systemFontBold,
-		fontSize = 24
-	})
+        font = native.systemFontBold,
+        fontSize = 24
+    })
     local loadingIconGroup = display.newGroup()
-	loadingIconGroup.x, loadingIconGroup.y = _CX, _CY
-	group:insert(loadingIconGroup)
-	relayout.add(loadingIconGroup)
-    loadingIconGroup:scale(0.7,0.7)
+    loadingIconGroup.x, loadingIconGroup.y = _CX, _CY
+    group:insert(loadingIconGroup)
+    relayout.add(loadingIconGroup)
+    loadingIconGroup:scale(0.7, 0.7)
     for i = 0, 2 do
         local loading = display.newImageRect(loadingIconGroup, 'images/loading/loading.png', 64, 64)
         loading.x = 0
@@ -43,7 +41,7 @@ function scene:create()
 end
 
 function scene:show(event)
-    local options = {effect="crossFade", time=reloadDelay}
+    local options = {effect = "crossFade", time = reloadDelay}
     if event.phase == 'will' then
     elseif event.phase == 'did' then
         canSpawnItems = true
