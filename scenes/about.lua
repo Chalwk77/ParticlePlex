@@ -17,7 +17,7 @@ local function switchScene(event)
 	composer.gotoScene( sceneID, options )
 	-- Show Options & About buttons in the Menu --
 	if sceneID == "scenes.menu" then
-		game_version.isVisible = true
+		if game_version ~= nil then game_version.isVisible = false end
 		if (optionsBtn ~= nil) and (aboutBtn ~= nil) then
 			optionsBtn.isVisible = true
 			aboutBtn.isVisible = true

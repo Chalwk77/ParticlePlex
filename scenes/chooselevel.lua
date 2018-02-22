@@ -143,7 +143,7 @@ local function switchScene(event)
 		level[10] = { "level 10", { 1, 2, 0.085 }, 30, "10"}
 	end
 	if sceneID == "scenes.menu" then
-		game_version.isVisible = true
+		if game_version ~= nil then game_version.isVisible = false end
 		if (optionsBtn ~= nil) and (aboutBtn ~= nil) then
 			optionsBtn.isVisible = true
 			aboutBtn.isVisible = true

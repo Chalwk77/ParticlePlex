@@ -21,7 +21,6 @@ local screenRight = screenLeft + screenWidth
 local screenTop = display.screenOriginY
 local screenHeight = display.viewableContentHeight - screenTop * 2
 local screenBottom = screenTop + screenHeight
-
 local onTouch
 local specs = {
     {w = 191, h = 180},
@@ -42,7 +41,7 @@ local function switchScene(event)
     end
     -- Show button particle effects
     if sceneID == "scenes.chooselevel" then
-        game_version.isVisible = false
+        if game_version ~= nil then game_version.isVisible = false end
         local index = math.random(1, 5)
         local puff = display.newImageRect('images/particle effects/startBtnParticle.png', specs[index].w, specs[index].h)
         puff.x, puff.y = startbutton.x, startbutton.y
@@ -53,7 +52,7 @@ local function switchScene(event)
             object:removeSelf()
         end})
     elseif sceneID == "scenes.options" then
-        game_version.isVisible = false
+        if game_version ~= nil then game_version.isVisible = false end
         colorSelection.isVisible = true
         local index = math.random(1, 5)
         local puff = display.newImageRect('images/particle effects/optionsBtnParticle.png', specs[index].w, specs[index].h)
@@ -65,7 +64,7 @@ local function switchScene(event)
             object:removeSelf()
         end})
     elseif sceneID == "scenes.about" then
-        game_version.isVisible = false
+        if game_version ~= nil then game_version.isVisible = false end
         local index = math.random(1, 5)
         local puff = display.newImageRect('images/particle effects/aboutBtnParticle.png', specs[index].w, specs[index].h)
         puff.x, puff.y = aboutbutton.x, aboutbutton.y
@@ -80,7 +79,7 @@ local function switchScene(event)
         helptext.isVisible = true
         helpShade.alpha = 0.50
     elseif sceneID == "scenes.reload_game" then
-        game_version.isVisible = false
+        if game_version ~= nil then game_version.isVisible = false end
         composer.setVariable( "levelNum", 1 )
         local index = math.random(1, 5)
         local puff = display.newImageRect('images/particle effects/startBtnParticle.png', specs[index].w, specs[index].h)
