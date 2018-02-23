@@ -5,6 +5,9 @@ local http = require "socket.http"
 local ltn12 = require("ltn12")
 local build_version = system.getInfo( "appVersionString" )
 
+-- Keeps the screen ON while idle.
+system.setIdleTimer( false )
+
 function CheckForUpdates()
     local latest_version_url = "https://pastebin.com/raw/Rw7GXN8z"
     local game = {version = build_version}
@@ -86,32 +89,36 @@ settings = {
 function fullScreenListener()
     local platform = system.getInfo('platformName')
     if platform == 'Win' then
-        Runtime:addEventListener('key', function(event)
-            if event.phase == 'down' and ((platform == 'Win' and (event.keyName == 'f11' or (event.keyName == 'enter' and event.isAltDown)))) then
-            if native.getProperty('windowMode') == 'fullscreen' then
-                native.setProperty('windowMode', 'normal')
-            else
-                native.setProperty('windowMode', 'fullscreen')
+        Runtime:addEventListener('key',
+            function(event)
+                if event.phase == 'down' and ((platform == 'Win' and (event.keyName == 'f11' or (event.keyName == 'enter' and event.isAltDown)))) then
+                    if native.getProperty('windowMode') == 'fullscreen' then
+                        native.setProperty('windowMode', 'normal')
+                    else
+                        native.setProperty('windowMode', 'fullscreen')
+                    end
+                end
             end
-        end
-    end)
-end
+        )
+    end
 end
 
 local function onBackButtonPressed( event )
-if event.keyName == "back" then
-    local platformName = system.getInfo( "platformName" )
-    if (platformName == "Android") or (platformName == "WinPhone") then
-        sounds.play('onTap')
-        native.showAlert("Confirm Exit", "Are you sure you want to exit?", {"Yes", "No"}, function(event)
-            if (event.action == 'clicked' and event.index == 1) then
-            native.requestExit()
+    if event.keyName == "back" then
+        local platformName = system.getInfo( "platformName" )
+        if (platformName == "Android") or (platformName == "WinPhone") then
+            sounds.play('onTap')
+            native.showAlert("Confirm Exit", "Are you sure you want to exit?", {"Yes", "No"},
+                function(event)
+                    if (event.action == 'clicked' and event.index == 1) then
+                        native.requestExit()
+                    end
+                end
+            )
+            return true
         end
-    end)
-    return true
-end
-end
-return false
+    end
+    return false
 end
 
 Runtime:addEventListener( "key", onBackButtonPressed )

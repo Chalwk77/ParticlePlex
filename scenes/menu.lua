@@ -5,8 +5,8 @@ local sounds = require('libraries.sounds')
 local colors = require('classes.colors-rgb')
 local relayout = require('libraries.relayout')
 local scene = composer.newScene()
+require('scenes.debug')
 menu_alpha = 0.15
-
 menu_physics = require("physics")
 local menu_tPrevious = system.getTimer( )
 
@@ -29,6 +29,7 @@ local specs = {
     {w = 180, h = 182},
     {w = 185, h = 181}
 }
+
 local function switchScene(event)
     local sceneID = event.target.id
     local options = {effect = "crossFade", time = 200, params = {title = event.target.id}}
@@ -185,6 +186,7 @@ local function setUpDisplay(grp)
         overFile = "images/backgrounds/start.png",
         onRelease = switchScene
     })
+
     startBtn.x = centerX
     startBtn.y = centerY
     startBtn.alpha = 0
@@ -282,6 +284,7 @@ function showMenuButtons()
         aboutBtn.isVisible = true
     end
 end
+
 -------------------------------------------------------------------------------------
 -- MENU ANIMATION STARTS --
 menu_objects = {}
@@ -395,11 +398,14 @@ function menu_animate( event )
         end
         menu_object:translate(xDelta, yDelta)
     end
+
+    local data = 1
+
     for key, menu_object in pairs ( menu_objects ) do
-        if false == menu_object.isVisible then
+        if menu_object.isVisible == false then
             local xVelocity = 0
             local yVelocity = 0
-            if "food" == menu_object.objectType or "poison" == menu_object.objectType then
+            if menu_object.objectType == "food" or menu_object.objectType == "poison" then
                 if menu_object.xVelocity < 0 then
                     xVelocity = - menu_randomSpeed()
                 elseif menu_object.xVelocity > 0 then
@@ -466,4 +472,5 @@ spawn_menu_objects( "poison", 0, - menu_randomSpeed() )
 spawn_menu_objects( "poison", menu_randomSpeed(), 0 )
 spawn_menu_objects( "poison", - menu_randomSpeed(), 0 )
 spawn_menu_objects( "reward", menu_randomSpeed(), 0 )
+
 return scene
